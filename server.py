@@ -82,3 +82,21 @@ def get_equipment():
 # ✅ Corrected main check
 if __name__ == "__main__":
     app.run(debug=True)
+    
+    import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+
+# Load database URL from Render
+DATABASE_URL = os.getenv("DATABASE_URL")  # Fetch from environment variables
+
+# Convert "postgres://" to "postgresql://"
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
