@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
-import mysql.connector
+import psycopg2
 
 app = Flask(__name__)  # ✅ Fix: Use name instead of main
 
-# Connect to MySQL Database
-db = mysql.connector.connect(
+# Connect to Postgres Database
+db = psycopg2.connect(
     host="localhost",
-    user="root",
+    user="postgres",
     password="newpassword",
     database="en_construction"
 )
