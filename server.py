@@ -20,8 +20,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 # ✅ Test route to check database connection
-@app.route('/test_db')
-def test_db():
+@app.route('/')
+def home():
+    return "Wecome to en_onstruction!"
     try:
         with db.engine.connect() as connection:
             return {"message": "Database connected successfully!"}
