@@ -1,32 +1,32 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# Load database URL from Render
-DATABASE_URL = os.getenv("DATABASE_URL")
+# ✅ Load the DATABASE_URL from Render environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")  # Fetch from environment variables
 
-# Convert "postgres://" to "postgresql://"
+# ✅ Convert "postgres://" to "postgresql://" (Render uses an outdated format)
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# Configure SQLAlchemy
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set. Make sure you added it in Render's environment variables.")
+
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-# 🟢 Test Database Connection
+# ✅ Test route to check database connection
 @app.route('/test_db')
 def test_db():
     try:
         with db.engine.connect() as connection:
-            connection.execute("SELECT 1")
-        return jsonify({"message": "Database connected successfully!"}), 200
+            return {"message": "Database connected successfully!"}
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return {"error": str(e)}
 
-# ✅ Start Flask App
 if name == "__main__":
     app.run(debug=True)
